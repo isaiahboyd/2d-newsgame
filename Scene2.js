@@ -10,12 +10,22 @@ class Scene2 extends Phaser.Scene {
     this.ship1 = this.add.image(config.width / 2 - 50, config.height / 2, "ship");
     this.ship2 = this.add.image(config.width / 2, config.height / 2, "ship2");
     this.ship3 = this.add.image(config.width / 2 + 50, config.height / 2, "ship3");
+    this.ship4 = this.add.image(config.width / 2, config.height / 2, "ship4");
+    this.ship5 = this.add.image(config.width / 2, config.height / 2, "ship5");
+    this.ship6= this.add.image(config.width / 2, config.height / 2, "ship6");
     //new
 
     this.enemies = this.physics.add.group();
+    //
+    this.cenemies = this.physics.add.group();
+    this.cenemies.add(this.ship4);
+    this.cenemies.add(this.ship5);
+    this.cenemies.add(this.ship6);
+    //
     this.enemies.add(this.ship1);
     this.enemies.add(this.ship2);
     this.enemies.add(this.ship3);
+
 
 
     
@@ -39,8 +49,13 @@ class Scene2 extends Phaser.Scene {
     }
     //Ship sizes
      this.ship1.setScale(0.7);
-     this.ship2.setScale(0.1)
+     this.ship2.setScale(0.5)
      this.ship3.setScale(0.7);
+     this.ship4.setScale(0.5);
+     this.ship5.setScale(0.5);
+     this.ship6.setScale(0.5);
+
+
     // this.ship1.setOrigin(0.5);
     // this.ship1.flipY = true;
     // this.ship1.angle = 90;
@@ -57,6 +72,9 @@ class Scene2 extends Phaser.Scene {
     });
    this.physics.add.overlap(this.player, this.powerUps, this.pickPowerUp, null, this);
    this.physics.add.overlap(this.player, this.enemies, this.hurtPlayer, null, this);
+   //
+   this.physics.add.overlap(this.player, this.cenemies, this.churtPlayer, null, this);
+   
    //Adding Hud
    var graphics = this.add.graphics();
    graphics.fillStyle(0x000000, 1);
@@ -86,8 +104,41 @@ class Scene2 extends Phaser.Scene {
     enemy.x = randomX;
     enemy.y = randomY;
     
+  }////////////////////////////////////////////////////////////////////////
+  churtPlayer(player, enemy) {
+   this.resetShipPos(enemy)
+   if(this.player.alpha < 1){
+    return;
+   }
+  // player.x = config.width / 2 - 8;
+   //player.y = config.height - 64;
+   player.disableBody(true,true);
+   //this.resetPlayer();
+   this.time.addEvent({
+    delay: 1000,
+    callback: this.resetPlayer,
+    callbackScope: this,
+    loop: false
+   });
   }
-
+  resetPlayer(){
+    var x = config.width / 2 - 8;
+    var y = config.height + 64;
+    this.player.enableBody(true, x, y, true, true);
+    this.player.alpha = 0.5;
+    var tween = this.tweens.add({
+      targets: this.player,
+      y: config.height - 64,
+      ease: 'Power1',
+      duration: 1500,
+      repeat:0,
+      onComplete: function(){
+        this.player.alpha = 1;
+      },
+      callbackScope: this
+    });
+  }
+////////////////////////////////////////////////////////////////////////
 
   moveShip(ship, speed){
     ship.y += speed;
@@ -112,6 +163,9 @@ class Scene2 extends Phaser.Scene {
     this.moveShip(this.ship1, 1);
     this.moveShip(this.ship2, 2);
     this.moveShip(this.ship3, 2);
+    this.moveShip(this.ship4, 2);
+    this.moveShip(this.ship5, 2);
+    this.moveShip(this.ship6, 2);
     this.background.tilePositionY -= 0.5;
     this.movePlayerManager();
     //new

@@ -6,11 +6,14 @@ class Scene1 extends Phaser.Scene {
   preload(){
     this.load.image("background","clouds.png");
     this.load.image("ship", "recycle_items.png");
-    this.load.image("ship2","bin.png");
+    this.load.image("ship2","recycle_items.png");
     this.load.image("ship3","recycle_items.png");
     //new
-    
-
+    this.load.image("ship4","bfg_ball.png");
+    this.load.image("ship5","bottle.png");
+    this.load.image("ship6","bag.png");
+   
+   
 
     this.load.spritesheet("power-up", "power-up.png",{
       frameWidth: 16,
